@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\Category\StoreRequest;
+use App\Http\Requests\Category\UpdateRequest;
 use App\Models\Category;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\UseCases\Category\StoreAction;
+use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
 {
@@ -19,45 +20,18 @@ class CategoryController extends Controller
         return response($responseBody, $responseCode)
             ->header('Content-Type', 'application/json');
     }
-    public function store(Request $request)
+    public function store(StoreRequest $request, StoreAction $action)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'unique:categories', 'max:400']
-        ]);
-        if ($validator->fails()) {
-            $response = response()->json([
-                'status' => 400,
-                'errors' => $validator->errors(),
-            ],400);
-            throw new HttpResponseException($response);
-        }
+        $category = $request->makeCategory();
         
-        Category::create([
-            'name' => $request->name
-        ]);
-        
-        $responseBody = 'ok';
-        $responseCode = 200;
-        
-        return response($responseBody, $responseCode)
-            ->header('Content-Type', 'text/plain');
+        return new CategoryResource($action($category));
     }
 
-    public function update(Request $request, Category $category)
+    public function update(UpdateRequest $request, Category $category)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => ['required','string', 'unique:categories', 'max:400']
-        ]);
-        if ($validator->fails()) {
-            $response = response()->json([
-                'status' => 400,
-                'errors' => $validator->errors(),
-            ],400);
-            throw new HttpResponseException($response);
-        }
-
+        $validated = $request->validated();
         
-        $category->name = $request->name;
+        $category->name = $validated['name'];
         $category->save();
 
         $responseBody = 'ok';
