@@ -7,6 +7,7 @@ use App\Http\Requests\Category\StoreRequest;
 use App\Http\Requests\Category\UpdateRequest;
 use App\Models\Category;
 use App\UseCases\Category\StoreAction;
+use App\UseCases\Category\UpdateAction;
 use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
@@ -22,22 +23,15 @@ class CategoryController extends Controller
     }
     public function store(StoreRequest $request, StoreAction $action)
     {
-        $category = $request->makeCategory();
-        
-        return new CategoryResource($action($category));
+        $data = $request->makeCategory();
+
+        return new CategoryResource($action($data));
     }
 
-    public function update(UpdateRequest $request, Category $category)
-    {
-        $validated = $request->validated();
-        
-        $category->name = $validated['name'];
-        $category->save();
+    public function update(UpdateRequest $request, Category $category, UpdateAction $action)
+    {   
+        $data = $request->makeCategory();
 
-        $responseBody = 'ok';
-        $responseCode = 200;
-
-        return response($responseBody, $responseCode)
-            ->header('Content-Type', 'text/plain');
+        return new CategoryResource($action($data, $category));
     }
 }
