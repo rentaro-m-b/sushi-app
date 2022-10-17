@@ -4,7 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-//use App\Models\Item;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
+use App\Models\Item;
 
 class OrderRequest extends FormRequest
 {
@@ -31,22 +33,34 @@ class OrderRequest extends FormRequest
                 'integer', 
                 'exists:tables,id',
             ],
-            //商品(item_id)が、寿司カテゴリに属しているかで条件分岐(ドリンクの場合はvolumeがなくても良い)
-            //optionsのバリデーション中からitem_idの取得方法
             'orders.*.item_id' => [
                 'required', 
                 'integer',
-                Rule::exists('items, id')->where(function ($query) {
-                    $query->where('on_sale', true);
-                }),
+                //on_sale = trueかのチェックは行っていない
+                //'exists:items,id,on_sale,true'ではダメっぽい。
+                'exists:items,id,on_sale,1'
             ],
             // 'orders.*.options.*' => [
             //     'integer',
             //     'exists:options,id',
-            //     Rule::exists('options,')
+            //     Rule::exists('options, id')->where(function ($query) {
+            //         $query->where('on_sale', true);
+            //     }),
             // ],
-            'orders.*.volume' => [
-            ]
+            // 'orders.*.volume' => [
+            //     'integer',
+            //     Rule::exists('options, id')->where(function ($query) {
+            //         $query->where('on_sale', true);
+            //     }),
+            // ]
         ];
+    }
+
+    protected function failedValidation(Validator $validator) {
+        $res = response()->json([
+            'status' => 400,
+            'errors' => $validator->errors(),
+        ], 400);
+        throw new HttpResponseException($res);
     }
 }
