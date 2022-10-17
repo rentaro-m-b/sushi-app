@@ -8,30 +8,39 @@ use App\Http\Requests\Category\UpdateRequest;
 use App\Models\Category;
 use App\UseCases\Category\StoreAction;
 use App\UseCases\Category\UpdateAction;
+use App\UseCases\Category\ListAction;
 use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
 {
-    public function list()
+    public function list(ListAction $action)
     {
-        $categories = Category::orderByDesc('created_at')->get();
-        $responseBody = $categories;
-        $responseCode = 200;
-
-        return response($responseBody, $responseCode)
-            ->header('Content-Type', 'application/json');
+        return CategoryResource::collection($action());
     }
+
     public function store(StoreRequest $request, StoreAction $action)
     {
         $data = $request->makeCategory();
+        $action($data);
+        $responseBody = 'ok';
+        $responseCode = 200;
 
-        return new CategoryResource($action($data));
+        return [
+            $responseBody,
+            $responseCode
+        ];
     }
 
     public function update(UpdateRequest $request, Category $category, UpdateAction $action)
     {   
         $data = $request->makeCategory();
+        $action($data, $category);
+        $responseBody = 'ok';
+        $responseCode = 200;
 
-        return new CategoryResource($action($data, $category));
+        return [
+            $responseBody,
+            $responseCode
+        ];
     }
 }

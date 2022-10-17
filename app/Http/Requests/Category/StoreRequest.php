@@ -42,7 +42,6 @@ class StoreRequest extends FormRequest
 
     public function makeCategory(): Category
     {
-        // バリデーションした値で埋めた Post を取得
         return new Category($this->validated());
     }
 }

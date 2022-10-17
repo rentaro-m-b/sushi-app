@@ -14,13 +14,9 @@ class CategoryResource extends JsonResource
      */
     public function toArray($request)
     {   
-        if ($request->method() == 'GET') {
-            return $request;
-        } else {
-            return [
-                'responseBody' => 'ok',
-                'responseCode' => 200
-            ];
-        }
+        return [
+            'id' => $this->resource->id,
+            'name' => $this->resource->name,
+        ];
     }
 }
