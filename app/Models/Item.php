@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
     use HasFactory;
+<<<<<<< HEAD
 
     protected $fillable = [
         'name',
@@ -15,4 +16,6 @@ class Item extends Model
         'stock',
         'on_sale'
     ];
+=======
+>>>>>>> e5a7b9b (10/17作業内容コミット)
 }
