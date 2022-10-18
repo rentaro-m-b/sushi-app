@@ -11,12 +11,7 @@ use App\Models\ItemOption;
 class ItemOption extends Model
 {
     use HasFactory;
-
-    // public function item()
-    // {
-    //     return $this->belongsTo(Item::class);
-    // }
-
+    
     public function option()
     {
         return $this->belongsTo(Option::class);
