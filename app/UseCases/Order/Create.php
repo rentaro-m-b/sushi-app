@@ -10,6 +10,7 @@ class Create{
         $table_id = $request->input('table_id');
         $orders = $request->input('orders');
 
+        //注文商品に適切なオプションが付与されているかを検証
         if(!ItemOption::check_options($orders)){
             return false;
         }

@@ -11,7 +11,7 @@ use App\Models\ItemOption;
 class ItemOption extends Model
 {
     use HasFactory;
-    
+
     public function option()
     {
         return $this->belongsTo(Option::class);
@@ -21,6 +21,7 @@ class ItemOption extends Model
         foreach($orders as $order){
             if(array_key_exists('options', $order)){
                 foreach($order['options'] as $option){
+                    //ItemOptionテーブルに、レコードが存在しなければ不適切なオプション
                     $result = ItemOption::where('item_id', $order['item_id'])->where('option_id', $option)->exists();
                     if(!$result){
                         return false;
