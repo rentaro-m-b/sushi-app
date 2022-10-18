@@ -3,20 +3,17 @@ namespace App\UseCases\Order;
 
 use App\Http\Requests\OrderRequest;
 use App\Models\Order;
-use App\Models\ItemOption;
 
 class Create{
     public function invoke(OrderRequest $request){
         $table_id = $request->input('table_id');
         $orders = $request->input('orders');
 
-        //注文商品に適切なオプションが付与されているかを検証
-        if(!ItemOption::check_options($orders)){
+        //適切な注文かどうか(option, volumeに関する)検証
+        if(!Order::check_orders($orders)){
             return false;
         }
-        
-        //商品(item)が、寿司カテゴリでない、かつvolumeが付与されている場合にエラーを返す。(後で実装)
-        //ItemOption::find($order['item_id'])->category_id;
+
         foreach($orders as $order){
             Order::create([
                 'item_id' => $order['item_id'],
