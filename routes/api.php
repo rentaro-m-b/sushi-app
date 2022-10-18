@@ -17,6 +17,7 @@ use App\Http\Controllers\CategoryController;
 |
 */
 
+
 Route::controller(CategoryController::class)->prefix('categories')->name('categories')->group(function() {
     Route::get('/', 'list');
     Route::post('/', 'store');
