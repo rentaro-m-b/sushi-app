@@ -25,10 +25,8 @@ class CategoryController extends Controller
         $responseBody = 'ok';
         $responseCode = 200;
 
-        return [
-            $responseBody,
-            $responseCode
-        ];
+        return response($responseBody, $responseCode)
+            ->header('Content-Type', 'text/plain');
     }
 
     public function update(UpdateRequest $request, Category $category, UpdateAction $action)
@@ -38,9 +36,7 @@ class CategoryController extends Controller
         $responseBody = 'ok';
         $responseCode = 200;
 
-        return [
-            $responseBody,
-            $responseCode
-        ];
+        return response($responseBody, $responseCode)
+            ->header('Content-Type', 'text/plain');
     }
 }
