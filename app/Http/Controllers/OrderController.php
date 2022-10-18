@@ -13,7 +13,8 @@ use Illuminate\Database\Eloquent\Builder;
 class OrderController extends Controller
 {
     public function order(OrderRequest $request, CreateUseCase $createUC){
-        $createUC->invoke($request);
+        $result = $createUC->invoke($request);
+        return response(var_dump($result));
     }
 
     // public function aiueo(OrderRequest $request){
