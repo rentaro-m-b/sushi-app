@@ -17,4 +17,14 @@ class Item extends Model
         'stock',
         'on_sale'
     ];
+
+    public function scopeWhereLike($query, string $attribute, string $keyword, int $position = 0) {
+        $keyword = addcslashes($keyword, '\_%');
+        $condition = [
+            1 => "{$keyword}%",
+            -1 => "%{$keyword}",
+        ][$position] ?? "%{$keyword}%";
+
+        return $query->where($attribute, 'LIKE', $condition);
+    }
 }
