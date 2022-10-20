@@ -23,24 +23,18 @@ class Order extends Model
     }
 
     public static function check_orders(array $orders){
-        if(self::check_options($orders) && self::check_volumes($orders)){
-            return true;
-        }else{
-            return false;
-        }
+        return self::check_options($orders) && self::check_volumes($orders);
     }
 
 
     private static function check_options(array $orders){
         foreach($orders as $order){
-            if(array_key_exists('options', $order)){
-                foreach($order['options'] as $option){
-                    //ItemOptionテーブルに、レコードが存在しなければ不適切なオプション
-                    $result = ItemOption::where('item_id', $order['item_id'])->where('option_id', $option)->exists();
-                    if(!$result){
-                        return false;
-                    }
-                }
+            //付与されたオプションの個数と、ItemOptionから取得するレコードが等しくない＝不適切なオプションがある
+            //上記の状況ではfalseを返す
+            $options = $order['options'];
+            $result = ItemOption::where('item_id', $order['item_id'])->whereIn('option_id', $options)->get();
+            if(count($result) != count($options)){
+                return false;
             }
         }
         return true;
