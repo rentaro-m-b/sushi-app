@@ -36,23 +36,15 @@ class OrderRequest extends FormRequest
             'orders.*.item_id' => [
                 'required', 
                 'integer',
-                //on_sale = trueかのチェックは行っていない
-                //'exists:items,id,on_sale,true'ではダメっぽい。
                 'exists:items,id,on_sale,1'
             ],
             'orders.*.options.*' => [
                 'integer',
                 'exists:options,id',
-                // Rule::exists('options, id')->where(function ($query) {
-                //     $query->where('on_sale', true);
-                // }),
             ],
             'orders.*.volume' => [
                 'integer',
                 'exists:volumes,id',
-                // Rule::exists('options, id')->where(function ($query) {
-                //     $query->where('on_sale', true);
-                // }),
             ]
         ];
     }
