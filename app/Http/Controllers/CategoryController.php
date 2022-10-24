@@ -22,21 +22,21 @@ class CategoryController extends Controller
     {
         $data = $request->makeCategory();
         $action($data);
-        $responseBody = 'ok';
+        $responseBody = array('message' => 'ok');
         $responseCode = 200;
 
         return response($responseBody, $responseCode)
-            ->header('Content-Type', 'text/plain');
+            ->header('Content-Type', 'application/json');
     }
 
     public function update(UpdateRequest $request, Category $category, UpdateAction $action)
     {   
         $data = $request->makeCategory();
         $action($data, $category);
-        $responseBody = 'ok';
+        $responseBody = array('message' => 'ok');
         $responseCode = 200;
 
         return response($responseBody, $responseCode)
-            ->header('Content-Type', 'text/plain');
+            ->header('Content-Type', 'application/json');
     }
 }
