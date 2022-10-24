@@ -5,10 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\OrderRequest;
 use App\UseCases\Order\Create as CreateUseCase;
-use App\Models\ItemOption;
-use App\Models\Item;
-use App\Models\Order;
-use Illuminate\Database\Eloquent\Builder;
 
 
 class OrderController extends Controller
