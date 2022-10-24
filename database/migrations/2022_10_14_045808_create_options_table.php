@@ -18,6 +18,7 @@ return new class extends Migration
                 $table->id();
                 $table->string('name', 45);
                 $table->boolean('on_sale');
+                $table->boolean('volume');
                 $table->timestamps();
             });
         }

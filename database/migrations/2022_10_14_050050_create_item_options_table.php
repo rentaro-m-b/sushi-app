@@ -18,6 +18,7 @@ return new class extends Migration
                 $table->id();
                 $table->foreignId('item_id')->constrained();
                 $table->foreignId('option_id')->constrained();
+                $table->boolean('on_sale');
                 $table->timestamps();
             });
         }

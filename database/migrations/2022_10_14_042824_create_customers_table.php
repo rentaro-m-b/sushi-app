@@ -13,11 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        if(!Schema::hasTable('paid_logs_items')){
-            Schema::create('paid_logs_items', function (Blueprint $table) {
+        if(!Schema::hasTable('customers')){
+            Schema::create('customers', function (Blueprint $table) {
                 $table->id();
-                $table->foreignId('paid_log_id')->constrained();
-                $table->foreignId('order_id')->constrained();
+                $table->boolean('paid');
                 $table->timestamps();
             });
         }
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('paid_logs_items');
+        Schema::dropIfExists('customers');
     }
 };
