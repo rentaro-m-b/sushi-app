@@ -13,8 +13,7 @@ class Order extends Model
 
     protected $fillable = [
         'item_id',
-        'table_id',
-        'paid'
+        'customer_id',
     ];
 
     public function item()
@@ -23,18 +22,41 @@ class Order extends Model
     }
 
     public static function check_orders(array $orders){
-        return self::check_options($orders) && self::check_volumes($orders);
+        if(is_string($result = self::check_options($orders))){
+            return $result;
+        }
+        return true;
+        //return self::check_options($orders) && self::check_volumes($orders);
     }
 
 
     private static function check_options(array $orders){
-        foreach($orders as $order){
+        foreach($orders as $index => $order){
             //付与されたオプションの個数と、ItemOptionから取得するレコードが等しくない＝不適切なオプションがある
             //上記の状況ではfalseを返す
-            $options = $order['options'];
-            $result = ItemOption::where('item_id', $order['item_id'])->whereIn('option_id', $options)->get();
-            if(count($result) != count($options)){
-                return false;
+            //OrderRequestで、optionsの中にはvolumeに関するoptionがないことは保証されている
+            $input_options = $order['options'];
+
+            //ここで、適切なオプションだけを取得する。コレクションクラスのオブジェクト。
+            $result = ItemOption::select('option_id')->where('item_id', $order['item_id'])->whereIn('option_id', $input_options)->get();
+            $approved_options = [];
+            foreach($result as $option){
+                //コレクションの要素を配列に変換
+                array_push($approved_options, $option['option_id']);
+            }
+
+            //入力されたオプションと、実際に使用できるオプションを比較して、差分を$diffに代入
+            //$diffが空でない=差分があるので、エラー文字列を作成
+            $diff = array_diff($input_options, $approved_options);
+            if(!empty($diff)){
+                $index+=1;
+                $error_message = "{$index}番目の注文の";
+                foreach($diff as $key => $value){
+                    $key = $key + 1;
+                    $error_message.="{$key}番目の{$value}\n";
+                }
+                $error_message.='というオプションが間違っています';
+                return $error_message;
             }
         }
         return true;

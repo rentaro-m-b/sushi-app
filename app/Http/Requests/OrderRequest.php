@@ -51,6 +51,12 @@ class OrderRequest extends FormRequest
         ];
     }
 
+    // public function messages(){
+    //     return [
+    //         'customer_id.required' => '引っ掛かってます',
+    //     ];
+    // }
+
     protected function failedValidation(Validator $validator) {
         $res = response()->json([
             'status' => 400,
