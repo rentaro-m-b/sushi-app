@@ -9,9 +9,9 @@ use App\UseCases\Order\Create as CreateUseCase;
 
 class OrderController extends Controller
 {
-    public function order(OrderRequest $request, CreateUseCase $createUC){
+    public function order(OrderRequest $request, CreateUseCase $create){
         //何もエラーがなければ$resultにはtrue,どこかでエラーが生じていたらfalseが入る
-        $result = $createUC($request);
+        $result = $create($request);
         return response(var_dump($result));
     }
 }
