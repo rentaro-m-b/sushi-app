@@ -38,13 +38,15 @@ class OrderRequest extends FormRequest
                 'integer',
                 'exists:items,id,on_sale,1'
             ],
+            //optionsに存在し、かつvolume=falseであれば通常オプション
             'orders.*.options.*' => [
                 'integer',
-                'exists:options,id',
+                'exists:options,id,volume,0',
             ],
+            //optionsに存在し、かつvolume=trueであれば通常オプション
             'orders.*.volume' => [
                 'integer',
-                'exists:volumes,id',
+                'exists:volumes,id,volume,1',
             ]
         ];
     }
