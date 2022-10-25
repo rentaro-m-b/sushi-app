@@ -5,7 +5,7 @@ use App\Http\Requests\OrderRequest;
 use App\Models\Order;
 
 class Create{
-    public function invoke(OrderRequest $request){
+    public function __invoke(OrderRequest $request){
         $table_id = $request->input('table_id');
         $orders = $request->input('orders');
 
