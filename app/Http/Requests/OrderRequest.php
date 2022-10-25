@@ -28,10 +28,10 @@ class OrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'table_id' => [
+            'customer_id' => [
                 'required', 
                 'integer', 
-                'exists:tables,id',
+                'exists:customers,id',
             ],
             'orders.*.item_id' => [
                 'required', 
@@ -46,7 +46,7 @@ class OrderRequest extends FormRequest
             //optionsに存在し、かつvolume=trueであれば通常オプション
             'orders.*.volume' => [
                 'integer',
-                'exists:volumes,id,volume,1',
+                'exists:options,id,volume,1',
             ]
         ];
     }
