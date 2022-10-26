@@ -14,6 +14,7 @@ class Order extends Model
     protected $fillable = [
         'item_id',
         'customer_id',
+        'price',
     ];
 
     public function item()
@@ -25,6 +26,11 @@ class Order extends Model
         if(is_string($result = self::check_options($orders))){
             return $result;
         }
+
+        if(is_string($result = self::check_volume($orders))){
+            return $result;
+        }
+
         return true;
         //return self::check_options($orders) && self::check_volumes($orders);
     }
@@ -62,12 +68,16 @@ class Order extends Model
         return true;
     }
 
-    private static function check_volumes(array $orders){
-        foreach($orders as $order){
-            $id = $order['item_id'];
-            //注文商品のcategory_idが1でない(寿司カテゴリでない)andボリューム指定の場合にfalseを返す
-            if(array_key_exists('volume', $order) && (Item::find($id)["category_id"] != 1)){
-                return false;
+    private static function check_volume(array $orders){
+        foreach($orders as $key => $order){
+            if(array_key_exists('volume', $order)){
+                $result = ItemOption::where('item_id', $order['item_id'])->where('option_id', $order['volume'])->first();
+                if(is_null($result)){
+                    $key += 1;
+                    return "{$key}番目の商品のvolumeが不適切です";
+                }
+            }else{
+                continue;
             }
         }
         return true;

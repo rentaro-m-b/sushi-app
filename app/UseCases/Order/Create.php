@@ -14,12 +14,12 @@ class Create{
         if(is_string($result)){
             return $result;
         }
-
+        
         foreach($orders as $order){
             Order::create([
                 'item_id' => $order['item_id'],
                 'customer_id' => $customer_id,
-                'price' => Item::select('price')->where('id', $order['item_id'])->get(),
+                'price' => Item::select('price')->where('id', $order['item_id'])->first()['price'],
             ]);
         }
 
