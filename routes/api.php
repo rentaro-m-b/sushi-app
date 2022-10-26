@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ItemController;
 
 /*
@@ -15,10 +16,11 @@ use App\Http\Controllers\ItemController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::controller(AuthController::class)->prefix('tokens')->name('tokens')->group(function() {
+    Route::post('/', 'register');
+    Route::post('/login', 'login');
 });
 
-Route::controller(ItemController::class)->prefix('items')->name('items')->group(function() {
+Route::middleware('auth:sanctum')->controller(ItemController::class)->prefix('items')->name('items')->group(function() {
     Route::post('/', 'store');
 });
