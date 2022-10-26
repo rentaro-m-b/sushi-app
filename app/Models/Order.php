@@ -41,6 +41,10 @@ class Order extends Model
             //付与されたオプションの個数と、ItemOptionから取得するレコードが等しくない＝不適切なオプションがある
             //上記の状況ではfalseを返す
             //OrderRequestで、optionsの中にはvolumeに関するoptionがないことは保証されている
+            //ただしoptionsが付与されていない可能性がある。この場合は次の注文を検証。
+            if(!array_key_exists('options', $order)){
+                continue;
+            }
             $input_options = $order['options'];
 
             //ここで、適切なオプションだけを取得する。コレクションクラスのオブジェクト。
