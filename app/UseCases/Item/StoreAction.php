@@ -10,7 +10,5 @@ class StoreAction
     {
         assert($item->exists);
         $item->save();
-
-        return $item;
     }
 }
