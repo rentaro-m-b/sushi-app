@@ -16,9 +16,10 @@ use App\Http\Controllers\ItemController;
 |
 */
 
-Route::controller(AuthController::class)->prefix('tokens')->name('tokens')->group(function() {
-    Route::post('/', 'register');
-    Route::post('/login', 'login');
+Route::controller(AuthController::class)->prefix('users')->name('users')->group(function() {
+    Route::post('/register', 'register');
+    Route::post('/', 'login');
+    Route::delete('/', 'logout');
 });
 
 Route::middleware('auth:sanctum')->controller(ItemController::class)->prefix('items')->name('items')->group(function() {

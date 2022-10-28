@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\User\RegisterRequest;
 use App\UseCases\User\RegisterAction;
 use App\Http\Requests\User\LoginRequest;
 use App\UseCases\User\LoginAction;
+use App\UseCases\User\LogoutAction;
 use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -30,5 +30,19 @@ class AuthController extends Controller
             return response($responseBody, $responseCode)
                 ->header('Content-Type', 'application/json');
         }
+    }
+    public function logout(LogoutAction $action)
+    {
+        if (Auth::guard('sanctum')->user()) {
+            $action(Auth::guard('sanctum')->user());
+            $responseBody = array('message' => 'ok');
+            $responseCode = 200;
+        } else {
+            $responseBody = array('message' => 'Not logged in');
+            $responseCode = 400;
+        }
+        
+        return response($responseBody, $responseCode)
+            ->header('Content-Type', 'application/json');
     }
 }
