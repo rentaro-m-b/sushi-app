@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Item;
 use App\Models\ItemOption;
+use App\Models\Customer;
+use App\Models\OrderOption;
 
 class Order extends Model
 {
@@ -20,6 +22,14 @@ class Order extends Model
     public function item()
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function customer(){
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function order_options(){
+        return $this->hasMany(OrderOption::class);
     }
 
     public static function check_orders(array $orders){
@@ -85,5 +95,9 @@ class Order extends Model
             }
         }
         return true;
+    }
+
+    public static function check_delete(Order $order){
+
     }
 }

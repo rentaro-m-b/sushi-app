@@ -3,11 +3,10 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class OrderRequest extends FormRequest
+class DeleteOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,25 +26,15 @@ class OrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'customer_id' => [
+            'customer' => [
                 'required', 
                 'integer', 
                 'exists:customers,id',
             ],
-            'orders.*.item_id' => [
-                'required', 
+            'order' => [
+                'required',
                 'integer',
-                'exists:items,id,on_sale,1'
-            ],
-            //optionsに存在し、かつvolume=falseであれば通常オプション
-            'orders.*.options.*' => [
-                'integer',
-                'exists:options,id,volume,0',
-            ],
-            //optionsに存在し、かつvolume=trueであれば通常オプション
-            'orders.*.volume' => [
-                'integer',
-                'exists:options,id,volume,1',
+                'exists:orders,id',
             ]
         ];
     }
@@ -56,5 +45,13 @@ class OrderRequest extends FormRequest
             'errors' => $validator->errors(),
         ], 400);
         throw new HttpResponseException($res);
+    }
+
+    public function validationData()
+    {
+        return array_merge($this->request->all(), [
+            'customer' => $this->customer,
+            'order' => $this->order,
+        ]);
     }
 }
