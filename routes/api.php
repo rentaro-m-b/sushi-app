@@ -24,4 +24,5 @@ Route::controller(AuthController::class)->prefix('users')->name('users')->group(
 
 Route::middleware('auth:sanctum')->controller(ItemController::class)->prefix('items')->name('items')->group(function() {
     Route::post('/', 'store');
+    Route::delete('/{item}', 'destroy');
 });
